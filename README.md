@@ -9,7 +9,7 @@ pip3 install infura
 ```python
 import infura
 
-ifr = infura.Infura(
+ifr = infura.Client(
     project_id='your-project-id',
     project_secret='your-project-secret',
     network='mainnet',

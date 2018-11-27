@@ -2,20 +2,26 @@
 import requests
 
 
-class Infura():
+class Client():
 
     def __init__(self,
                  project_id,
-                 project_secret,
+                 project_secret=None,
                  network='mainnet',
                  ):
+        # verify network
         if network not in ['mainnet', 'ropsten', 'kovan', 'rinkeby']:
             raise Exception('network could only be mainnet/ropsten/kovan/rinkeby')
 
+        # id/secret
+        self._project_id = project_id
+        self._project_secret = project_secret
+        self._network = network
+
         # Endpoint URL
         self._endpoint = 'https://{network}.infura.io/v3/{project_id}'.format(
-            network=network,
-            project_id=project_id,
+            network=self._network,
+            project_id=self._project_id,
         )
 
         # headers
