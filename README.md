@@ -16,5 +16,5 @@ ifr = infura.Client(
 )
 
 gas_price = ifr.eth_gas_price()
-balance = ifr.eth_get_balance(address, block)
+balance = ifr.eth_get_balance('0x39eB410144784010b84B076087B073889411F878')
 ```
