@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="infura",
-    version="0.0.4",
+    version="0.1.0",
     author="@neoctobers",
     author_email="neoctobers@gmail.com",
     description="Infura.io wrapper",
