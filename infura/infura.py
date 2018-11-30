@@ -38,7 +38,7 @@ class Client():
             'id': 1,
         }
 
-    def req(self):
+    def _req(self):
         self._payload['params'] = self._params
 
         r = requests.post(
@@ -51,10 +51,10 @@ class Client():
         # sample: {'jsonrpc': '2.0', 'id': 1, 'error': {'code': -32602, 'message': 'invalid argument 0: json: cannot unmarshal hex string of odd length into Go value of type common.Address'}}
         return r
 
-    def eth_gas_price(self):
+    def eth_get_gas_price(self):
         self._payload['method'] = 'eth_gasPrice'
 
-        r = self.req()
+        r = self._req()
 
         return int(r['result'], 16)
 
@@ -62,6 +62,22 @@ class Client():
         self._payload['method'] = 'eth_getBalance'
         self._params = [address, block]
 
-        r = self.req()
+        r = self._req()
 
         return int(r['result'], 16)
+
+    def eth_get_block_number(self):
+        self._payload['method'] = 'eth_blockNumber'
+
+        r = self._req()
+
+        return int(r['result'], 16)
+
+    def eth_get_block_by_number(self, block_number, show_transaction_details: bool = False):
+        self._payload['method'] = 'eth_getBlockByNumber'
+        self._params = [hex(block_number), show_transaction_details]
+
+        r = self._req()
+
+        return r['result']
+
