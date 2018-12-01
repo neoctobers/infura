@@ -17,7 +17,7 @@ ifr = infura.Client(
     project_id='your-project-id',
     project_secret='your-project-secret',
     network='mainnet',
-    cache_expire_after=3,
+    cache_expire_after=5,
 )
 
 gas_price = ifr.eth_get_gas_price()

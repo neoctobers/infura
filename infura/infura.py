@@ -11,8 +11,9 @@ class Client():
                  project_secret=None,
                  network='mainnet',
                  cache_backend='sqlite',
-                 cache_expire_after=3,
+                 cache_expire_after=5,
                  ):
+
         # verify network
         if network not in ['mainnet', 'ropsten', 'kovan', 'rinkeby']:
             raise Exception('network could only be mainnet/ropsten/kovan/rinkeby')
