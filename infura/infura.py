@@ -1,5 +1,7 @@
 # coding:utf-8
-import requests
+import os
+import tempfile
+import requests_cache
 
 
 class Client():
@@ -8,6 +10,8 @@ class Client():
                  project_id,
                  project_secret=None,
                  network='mainnet',
+                 cache_backend='sqlite',
+                 cache_expire_after=3,
                  ):
         # verify network
         if network not in ['mainnet', 'ropsten', 'kovan', 'rinkeby']:
@@ -38,10 +42,32 @@ class Client():
             'id': 1,
         }
 
-    def _req(self):
+        # session & cache
+        self._session = None
+        self._cache_name = os.path.join(tempfile.gettempdir(), 'etherscan_cache')
+        self._cache_backend = cache_backend
+        self._cache_expire_after = cache_expire_after
+
+    @property
+    def session(self):
+        if not self._session:
+            self._session = requests_cache.core.CachedSession(
+                cache_name=self._cache_name,
+                backend=self._cache_backend,
+                expire_after=self._cache_expire_after,
+            )
+            self._session.headers.update(
+                {
+                    'User-agent': 'infura - python wrapper '
+                                  'around infura.io (github.com/neoctobers/infura)'
+                }
+            )
+        return self._session
+
+    def __req(self):
         self._payload['params'] = self._params
 
-        r = requests.post(
+        r = self.session.post(
             url=self._endpoint,
             headers=self._headers,
             json=self._payload,
@@ -54,7 +80,7 @@ class Client():
     def eth_get_gas_price(self):
         self._payload['method'] = 'eth_gasPrice'
 
-        r = self._req()
+        r = self.__req()
 
         return int(r['result'], 16)
 
@@ -62,14 +88,14 @@ class Client():
         self._payload['method'] = 'eth_getBalance'
         self._params = [address, block]
 
-        r = self._req()
+        r = self.__req()
 
         return int(r['result'], 16)
 
     def eth_get_block_number(self):
         self._payload['method'] = 'eth_blockNumber'
 
-        r = self._req()
+        r = self.__req()
 
         return int(r['result'], 16)
 
@@ -77,7 +103,6 @@ class Client():
         self._payload['method'] = 'eth_getBlockByNumber'
         self._params = [hex(block_number), show_transaction_details]
 
-        r = self._req()
+        r = self.__req()
 
         return r['result']
-

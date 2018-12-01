@@ -2,6 +2,8 @@
 
 An Infura.io API wrapper, for Python.
 
+With a default cache supported by [requests-cache](https://github.com/reclosedev/requests-cache)
+
 ## Installation
 ```
 pip3 install infura
@@ -15,6 +17,7 @@ ifr = infura.Client(
     project_id='your-project-id',
     project_secret='your-project-secret',
     network='mainnet',
+    cache_expire_after=3,
 )
 
 gas_price = ifr.eth_get_gas_price()
